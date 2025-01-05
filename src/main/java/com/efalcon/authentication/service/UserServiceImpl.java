@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(String id) {
+    public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void removeById(String id) {
+    public void removeById(Long id) {
         if(this.userRepository.existsById(id)) {
             this.userRepository.deleteById(id);
         } else throw new UserNotFoundException();

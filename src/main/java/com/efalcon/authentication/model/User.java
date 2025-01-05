@@ -3,9 +3,6 @@ package com.efalcon.authentication.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +15,7 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(generator="system-uuid")
-    private String id;
+    private Long id;
     /** Person name. */
     private String name;
     /** Person last name. */
@@ -34,6 +31,4 @@ public class User {
     /** Users can have multiple linked accounts */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserProvider> providers;
-    /** Is admin. */
-    private Boolean isAdmin = false;
 }

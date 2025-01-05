@@ -8,10 +8,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.Optional;
 
 public interface UserService extends UserDetailsService {
-    Optional<User> findById(String id);
+    Optional<User> findById(Long id);
     User save(User user);
     User update(String id, User user);
-    void removeById(String id);
+    void removeById(Long id);
     User findByUsername(String username);
     boolean existsByUsername(String username);
 

@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDto findById(@PathVariable("id") String id) {
+    public UserDto findById(@PathVariable("id") Long id) {
         Optional<User> byId = this.userService.findById(id);
         if (byId.isPresent()) {
             return userMapper.convertToDTO(byId.get());
@@ -43,8 +43,9 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void singUpUser(@RequestBody UserRegister user) {
-        this.userService.save(convertToEntity(user));
+    public UserDto register(@RequestBody UserRegister user) {
+        User savedUser = this.userService.save(convertToEntity(user));
+        return userMapper.convertToDTO(savedUser);
     }
 
     @PostMapping("/login")
