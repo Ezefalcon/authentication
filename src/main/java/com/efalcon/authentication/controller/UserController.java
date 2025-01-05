@@ -10,7 +10,7 @@ import com.efalcon.authentication.service.exceptions.UserNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import util.GenericMapper;
+import com.efalcon.authentication.util.GenericMapper;
 
 import java.util.Optional;
 
@@ -22,9 +22,9 @@ import java.util.Optional;
 @CrossOrigin
 public class UserController {
 
-    private UserService userService;
-    private ModelMapper modelMapper;
-    private GenericMapper<User, UserDto> userMapper;
+    private final UserService userService;
+    private final ModelMapper modelMapper;
+    private final GenericMapper<User, UserDto> userMapper;
 
     public UserController(UserService userService, ModelMapper modelMapper) {
         this.userService = userService;

@@ -16,8 +16,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public void badIdExceptionHandler() {
-        // Nothing to repos
+    public void badIdExceptionHandler(IllegalArgumentException exc) {
+        generateResponse(exc, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UsernameOrPasswordInvalidException.class)
@@ -37,6 +37,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static ResponseEntity<ErrorDTO> generateResponse(Exception exc, HttpStatus httpStatus) {
         ErrorDTO errorDTO = new ErrorDTO(exc);
-        return new ResponseEntity(errorDTO, httpStatus);
+        return new ResponseEntity<>(errorDTO, httpStatus);
     }
 }
