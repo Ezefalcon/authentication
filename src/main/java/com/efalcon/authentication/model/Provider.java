@@ -1,7 +1,7 @@
 package com.efalcon.authentication.model;
 
 public enum Provider {
-    LOCAL,
+    JWT,
     GOOGLE,
     FACEBOOK
 }

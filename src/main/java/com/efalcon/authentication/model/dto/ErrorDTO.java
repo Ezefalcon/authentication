@@ -12,6 +12,7 @@ public class ErrorDTO {
     private String cause;
     private LocalDateTime dateTime;
 
+    // For debugging purposes
     public ErrorDTO(Exception exc) {
         if(exc.getStackTrace().length > 0) {
             this.cause = exc.getStackTrace()[0].toString();

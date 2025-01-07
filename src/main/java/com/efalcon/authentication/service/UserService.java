@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface UserService extends UserDetailsService {
     Optional<User> findById(Long id);
     User save(User user);
-    User update(String id, User user);
+    User update(Long id, User user) throws IllegalAccessException;
     void removeById(Long id);
     User findByUsername(String username);
     boolean existsByUsername(String username);

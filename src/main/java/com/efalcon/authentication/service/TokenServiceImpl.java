@@ -1,6 +1,7 @@
 package com.efalcon.authentication.service;
 
 import com.efalcon.authentication.model.Provider;
+import com.efalcon.authentication.model.Role;
 import com.efalcon.authentication.model.User;
 import com.efalcon.authentication.model.dto.UserTokenDto;
 import io.jsonwebtoken.Claims;
@@ -33,7 +34,7 @@ public class TokenServiceImpl implements TokenService {
 
         Key key = Keys.hmacShaKeyFor(secret.getBytes());
 
-        String compactTokenString = Jwts.builder()
+        return Jwts.builder()
                 .claim("id", user.getId())
                 .claim("username", user.getUsername())
                 .claim("roles", user.getRoles())
@@ -41,8 +42,6 @@ public class TokenServiceImpl implements TokenService {
                 .setExpiration(expirationDate)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-
-        return "Bearer " + compactTokenString;
     }
 
     @Override
@@ -59,8 +58,8 @@ public class TokenServiceImpl implements TokenService {
         String username = body.getSubject();
         Long userId = body.get("id", Long.class);
         String email = body.get("email", String.class);
-        List<Long> roles = body.get("roles", List.class);
-        Provider provider = body.get("provider", Provider.class);
+        List<Role> roles = body.get("roles", List.class);
+        Provider provider = Provider.JWT;
 
         return new UserTokenDto(userId, username, email, roles, provider);
     }

@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -56,8 +55,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(String id, User user) {
-        return null;
+    public User update(Long id, User user) {
+        Optional<User> byId = userRepository.findById(id);
+
+        if (byId.isEmpty()) throw new UserNotFoundException();
+        user.setId(id);
+
+        return this.save(user);
     }
 
     @Override
@@ -69,7 +73,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        Optional<User> byUsername = userRepository.findByUsername(username);
+        return byUsername.orElseThrow(UserNotFoundException::new);
     }
 
     @Override
@@ -81,7 +86,7 @@ public class UserServiceImpl implements UserService {
     public TokenDTO login(@Valid UserLogin userLogin) {
         User user = findByUsername(userLogin.getUsername());
         if(Objects.nonNull(user) && passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) {
-            String token = tokenService.generateToken(user, Provider.LOCAL);
+            String token = tokenService.generateToken(user, Provider.JWT);
             return new TokenDTO(token);
         }
         throw new UsernameOrPasswordInvalidException();
@@ -89,10 +94,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username){
-        User applicationUser = userRepository.findByUsername(username);
-        if (Objects.isNull(applicationUser)) {
-            throw new UsernameNotFoundException(username);
-        }
+        User applicationUser = this.findByUsername(username);
         return new org.springframework.security.core.userdetails.User(applicationUser.getUsername(), applicationUser.getPassword(), emptyList());
     }
 }

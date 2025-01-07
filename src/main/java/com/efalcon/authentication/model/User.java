@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 public class User {
     @Id
-    @GeneratedValue(generator="system-uuid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /** Person name. */
     private String name;

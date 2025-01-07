@@ -1,5 +1,6 @@
 package com.efalcon.authentication.controller;
 
+import com.efalcon.authentication.annotation.SameUserOrAdminAccessOnly;
 import com.efalcon.authentication.model.User;
 import com.efalcon.authentication.model.dto.TokenDTO;
 import com.efalcon.authentication.model.dto.UserDto;
@@ -41,7 +42,13 @@ public class UserController {
         throw new UserNotFoundException();
     }
 
-    @PostMapping("/register")
+    /**
+     * Following the conventions of REST API, but it can be changed
+     * to /register
+     * @param user
+     * @return
+     */
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto register(@RequestBody UserRegister user) {
         User savedUser = this.userService.save(convertToEntity(user));
@@ -56,6 +63,13 @@ public class UserController {
     @GetMapping("/checkUsernameAvailability/{username}")
     public boolean checkUserAvailability(@PathVariable String username) {
         return !this.userService.existsByUsername(username);
+    }
+
+    @SameUserOrAdminAccessOnly
+    @PutMapping("/{id}")
+    public UserDto update(@RequestBody UserRegister user, @PathVariable Long id) throws IllegalAccessException {
+        User updatedUser = this.userService.update(id, convertToEntity(user));
+        return userMapper.convertToDTO(updatedUser);
     }
 
     private User convertToEntity(UserRegister userRegister) {
