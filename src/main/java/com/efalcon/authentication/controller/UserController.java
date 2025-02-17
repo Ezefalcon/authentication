@@ -34,6 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @SameUserOrAdminAccessOnly
     public UserDto findById(@PathVariable("id") Long id) {
         Optional<User> byId = this.userService.findById(id);
         if (byId.isPresent()) {
@@ -66,7 +67,7 @@ public class UserController {
     }
 
     @SameUserOrAdminAccessOnly
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", name = "id")
     public UserDto update(@RequestBody UserRegister user, @PathVariable Long id) throws IllegalAccessException {
         User updatedUser = this.userService.update(id, convertToEntity(user));
         return userMapper.convertToDTO(updatedUser);

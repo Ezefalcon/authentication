@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
  */
 @Component
 @Aspect
-@Profile({"!test", "!dev"})
+@Profile({"!test"})
 public class SecurityAspect {
 
     @Before("@within(sameUserOrAdminAccessOnly) || @annotation(sameUserOrAdminAccessOnly)")
@@ -31,8 +31,8 @@ public class SecurityAspect {
                                           com.efalcon.authentication.annotation.SameUserOrAdminAccessOnly sameUserOrAdminAccessOnly)
             throws IllegalAccessException {
         UserTokenDto authenticatedUser = (UserTokenDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!authenticatedUser.getId().equals(getIdFromPathVariable(joinPoint, sameUserOrAdminAccessOnly)) && !authenticatedUser.getRoles().contains(Role.ADMIN)) {
-            throw new IllegalAccessException();
+        if (!authenticatedUser.getId().equals(getIdFromPathVariable(joinPoint, sameUserOrAdminAccessOnly)) || authenticatedUser.getRoles().contains(Role.ADMIN)) {
+            throw new IllegalAccessException("User is not authorized to access this resource");
         }
     }
 
@@ -44,20 +44,19 @@ public class SecurityAspect {
             Object[] args = joinPoint.getArgs();
             Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 
-            String paramName = sameUserOrAdminAccessOnly.value();
-
 
             // Find the parameter annotated with @PathVariable and matching paramName
             for (int i = 0; i < parameterAnnotations.length; i++) {
                 for (Annotation annotation : parameterAnnotations[i]) {
-                    if (annotation instanceof PathVariable pathVariable && pathVariable.value().equals(paramName)) {
+                    if (annotation instanceof PathVariable pathVariable) {
                         return (Long) args[i];
                     }
                 }
             }
-            throw new IllegalArgumentException("No such parameter " + paramName);
         } catch (Throwable t) {
-            throw new RuntimeException("Error while getting id from parameter", t);
+            throw new RuntimeException("Error getting id from parameter", t);
         }
+
+        throw new RuntimeException("No such parameter " + sameUserOrAdminAccessOnly.value());
     }
 }

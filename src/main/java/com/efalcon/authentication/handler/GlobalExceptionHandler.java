@@ -2,6 +2,7 @@ package com.efalcon.authentication.handler;
 
 import com.efalcon.authentication.model.dto.ErrorDTO;
 import com.efalcon.authentication.service.exceptions.AlreadyExistsException;
+import com.efalcon.authentication.service.exceptions.NotFoundException;
 import com.efalcon.authentication.service.exceptions.UsernameOrPasswordInvalidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IllegalAccessException.class)
     public ResponseEntity<ErrorDTO> accessForbiddenException(IllegalAccessException exc) {
         return generateResponse(exc, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorDTO> notFoundException(NotFoundException exc) {
+        return generateResponse(exc, HttpStatus.NOT_FOUND);
     }
 
     private static ResponseEntity<ErrorDTO> generateResponse(Exception exc, HttpStatus httpStatus) {

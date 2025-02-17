@@ -11,4 +11,8 @@ public class AlreadyExistsException extends IllegalArgumentException {
     public AlreadyExistsException(String entityName) {
         super(entityName + " with provided id already exists");
     }
+
+    public AlreadyExistsException(String entityName, String customText) {
+        super(entityName + customText);
+    }
 }

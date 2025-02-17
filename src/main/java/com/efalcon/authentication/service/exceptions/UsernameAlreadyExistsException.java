@@ -5,6 +5,6 @@ package com.efalcon.authentication.service.exceptions;
  */
 public class UsernameAlreadyExistsException extends AlreadyExistsException {
     public UsernameAlreadyExistsException() {
-        super("Username");
+        super("Username", " already exists");
     }
 }

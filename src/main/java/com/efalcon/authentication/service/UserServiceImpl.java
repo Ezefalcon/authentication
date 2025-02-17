@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) {
+    public User findByUsername(String username) throws UserNotFoundException {
         Optional<User> byUsername = userRepository.findByUsername(username);
         return byUsername.orElseThrow(UserNotFoundException::new);
     }
@@ -84,10 +85,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokenDTO login(@Valid UserLogin userLogin) {
-        User user = findByUsername(userLogin.getUsername());
-        if(Objects.nonNull(user) && passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) {
-            String token = tokenService.generateToken(user, Provider.JWT);
-            return new TokenDTO(token);
+        try {
+            User user = findByUsername(userLogin.getUsername());
+            if(Objects.nonNull(user) && passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) {
+                String token = tokenService.generateToken(user);
+                return new TokenDTO(token);
+            }
+        } catch (UsernameNotFoundException e) {
+            throw new UsernameOrPasswordInvalidException();
         }
         throw new UsernameOrPasswordInvalidException();
     }

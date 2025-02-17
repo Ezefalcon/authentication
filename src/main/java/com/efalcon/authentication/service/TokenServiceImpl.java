@@ -28,7 +28,7 @@ public class TokenServiceImpl implements TokenService {
     private String secret;
 
     @Override
-    public String generateToken(User user, Provider provider) {
+    public String generateToken(User user) {
         Instant expirationTime = Instant.now().plus(expiration, ChronoUnit.HOURS);
         Date expirationDate = Date.from(expirationTime);
 
@@ -38,7 +38,7 @@ public class TokenServiceImpl implements TokenService {
                 .claim("id", user.getId())
                 .claim("username", user.getUsername())
                 .claim("roles", user.getRoles())
-                .claim("provider", provider)
+                .claim("provider", Provider.JWT)
                 .setExpiration(expirationDate)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();

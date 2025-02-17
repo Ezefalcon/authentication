@@ -89,5 +89,3 @@ Configured to be stateless using JWTs.
 ### Endpoint Security
 *   **Public Endpoints**: `/auth` and `/auth/login` are public.
 *   All other endpoints require authentication.
-
-## Dependencies
