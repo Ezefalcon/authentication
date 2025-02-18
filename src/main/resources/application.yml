@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/auth?createDatabaseIfNotExist=true
+    username: root
+    password: root
+  application:
+    name: authentication
+
+  jpa:
+    hibernate.ddl-auto: update
+#    generate-ddl: true
+#    show-sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          #          facebook:
+          #            client-id: '<your client id> '
+          #            client-secret: <your client secret>
+          google:
+            client-secret: yourClientSecret
+            client-id: yourClientId
+            scope: openid,profile,email
+      resource-server:
+        jwt:
+          issuer-uri: https://accounts.google.com
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+server:
+  servlet:
+    context-path: /api
+
+jwt:
+  expiration: 100000
+  secret: mkwEeHcRmXKXN4swNAEck5afGy93KiQ3 #EXAMPLE
