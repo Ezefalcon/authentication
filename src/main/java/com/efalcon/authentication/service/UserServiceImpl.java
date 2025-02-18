@@ -60,8 +60,8 @@ public class UserServiceImpl implements UserService {
         Optional<User> byId = userRepository.findById(id);
 
         if (byId.isEmpty()) throw new UserNotFoundException();
-        user.setId(id);
 
+        user.setId(id);
         return this.save(user);
     }
 

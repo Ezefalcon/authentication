@@ -10,9 +10,11 @@ import com.efalcon.authentication.service.UserService;
 import com.efalcon.authentication.service.exceptions.UserNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import com.efalcon.authentication.util.GenericMapper;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -71,6 +73,19 @@ public class UserController {
     public UserDto update(@RequestBody UserRegister user, @PathVariable Long id) throws IllegalAccessException {
         User updatedUser = this.userService.update(id, convertToEntity(user));
         return userMapper.convertToDTO(updatedUser);
+    }
+
+    @SameUserOrAdminAccessOnly
+    @DeleteMapping
+    public void delete(@PathVariable Long id) {
+        this.userService.removeById(id);
+    }
+
+    @GetMapping("/info")
+    @SameUserOrAdminAccessOnly
+    public Map<String, Object> userInfo(OAuth2AuthenticationToken authentication) {
+        // Return the user's attributes as a map
+        return authentication.getPrincipal().getAttributes();
     }
 
     private User convertToEntity(UserRegister userRegister) {

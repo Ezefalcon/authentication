@@ -55,7 +55,7 @@ public class TokenServiceImpl implements TokenService {
 
         Claims body = jwsClaims.getBody();
 
-        String username = body.getSubject();
+        String username = body.get("username", String.class);
         Long userId = body.get("id", Long.class);
         String email = body.get("email", String.class);
         List<Role> roles = body.get("roles", List.class);
