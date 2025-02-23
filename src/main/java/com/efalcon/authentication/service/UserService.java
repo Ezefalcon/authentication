@@ -12,7 +12,9 @@ public interface UserService extends UserDetailsService {
     User save(User user);
     User update(Long id, User user) throws IllegalAccessException;
     void removeById(Long id);
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String username);
+    User findByUsernameOrErr(String username);
     boolean existsByUsername(String username);
 
     TokenDTO login(UserLogin userLogin);

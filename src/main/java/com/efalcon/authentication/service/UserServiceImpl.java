@@ -73,7 +73,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) throws UserNotFoundException {
+    public Optional<User> findByUsername(String username) throws UserNotFoundException {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String username) {
+        return userRepository.findByEmail(username);
+    }
+
+    @Override
+    public User findByUsernameOrErr(String username) {
         Optional<User> byUsername = userRepository.findByUsername(username);
         return byUsername.orElseThrow(UserNotFoundException::new);
     }
@@ -86,7 +96,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public TokenDTO login(@Valid UserLogin userLogin) {
         try {
-            User user = findByUsername(userLogin.getUsername());
+            User user = findByUsernameOrErr(userLogin.getUsername());
             if(Objects.nonNull(user) && passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) {
                 String token = tokenService.generateToken(user);
                 return new TokenDTO(token);
@@ -99,7 +109,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username){
-        User applicationUser = this.findByUsername(username);
+        User applicationUser = this.findByUsernameOrErr(username);
         return new org.springframework.security.core.userdetails.User(applicationUser.getUsername(), applicationUser.getPassword(), emptyList());
     }
 }

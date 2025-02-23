@@ -37,6 +37,7 @@ public class TokenServiceImpl implements TokenService {
         return Jwts.builder()
                 .claim("id", user.getId())
                 .claim("username", user.getUsername())
+                .claim("email", user.getEmail())
                 .claim("roles", user.getRoles())
                 .claim("provider", Provider.JWT)
                 .setExpiration(expirationDate)

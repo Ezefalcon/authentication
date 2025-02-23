@@ -17,7 +17,7 @@ public class UserProvider {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
     /** Name of the provider */
@@ -25,7 +25,4 @@ public class UserProvider {
 
     /** Unique identifier from the provider */
     private String providerUserId;
-
-    /** Email associated with the provider */
-    private String email;
 }

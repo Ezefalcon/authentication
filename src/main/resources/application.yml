@@ -15,13 +15,11 @@ spring:
   security:
     oauth2:
       client:
+        enabled: false # DISABLES OAUTH2
         registration:
-          #          facebook:
-          #            client-id: '<your client id> '
-          #            client-secret: <your client secret>
           google:
-            client-secret: yourClientSecret
-            client-id: yourClientId
+            client-secret: yourClientSecret # SET WITH YOUR GOOGLE CREDS
+            client-id: yourClientId # SET WITH YOUR GOOGLE CREDS
             scope: openid,profile,email
       resource-server:
         jwt:

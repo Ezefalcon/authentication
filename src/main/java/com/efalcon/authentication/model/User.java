@@ -24,11 +24,17 @@ public class User {
     private String username;
     /** Encrypted password. */
     private String password;
+    /** User email */
+    private String email;
+    /** Picture URL */
+    private String picture;
+
     /** Roles */
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private List<Role> roles;
-    /** Users can have multiple linked accounts */
+
+    /** Users can have multiple linked accounts, if no provider is set, the account was created in the app */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserProvider> providers;
 }

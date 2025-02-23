@@ -47,6 +47,16 @@ It is designed to be used as a microservice within an internal network for handl
 ## Step 4: Start the Application
     mvn spring-boot:run
 
+## Enable OAuth2
+
+Set your google credentials
+
+   ![img.png](oauth2.png)
+
+Set spring.security.oauth2.enabled to true
+
+   Go to http://localhost:8080/api/login and log in with your google acc from there
+
 ### API Endpoints
 
 #### User Registration
@@ -87,5 +97,5 @@ Disabled to allow stateless authentication.
 Configured to be stateless using JWTs.
 
 ### Endpoint Security
-*   **Public Endpoints**: `/auth` and `/auth/login` are public.
+*   **Public Endpoints**: `/api/users`,`/api/users/login` and `/api/login` are public.
 *   All other endpoints require authentication.

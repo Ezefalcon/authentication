@@ -1,20 +1,19 @@
 package com.efalcon.authentication.controller;
 
 import com.efalcon.authentication.annotation.SameUserOrAdminAccessOnly;
+import com.efalcon.authentication.model.Provider;
 import com.efalcon.authentication.model.User;
-import com.efalcon.authentication.model.dto.TokenDTO;
-import com.efalcon.authentication.model.dto.UserDto;
-import com.efalcon.authentication.model.dto.UserLogin;
-import com.efalcon.authentication.model.dto.UserRegister;
+import com.efalcon.authentication.model.UserProvider;
+import com.efalcon.authentication.model.dto.*;
 import com.efalcon.authentication.service.UserService;
 import com.efalcon.authentication.service.exceptions.UserNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import com.efalcon.authentication.util.GenericMapper;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -82,10 +81,8 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    @SameUserOrAdminAccessOnly
-    public Map<String, Object> userInfo(OAuth2AuthenticationToken authentication) {
-        // Return the user's attributes as a map
-        return authentication.getPrincipal().getAttributes();
+    public UserTokenDto userInfo(AbstractAuthenticationToken authentication) {
+        return (UserTokenDto) authentication.getPrincipal();
     }
 
     private User convertToEntity(UserRegister userRegister) {

@@ -66,7 +66,7 @@ class UserServiceImplTest {
     @Test
     void findByUsername_ShouldReturnUser_WhenUserExists() {
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-        User foundUser = userService.findByUsername(user.getUsername());
+        User foundUser = userService.findByUsernameOrErr(user.getUsername());
         assertNotNull(foundUser);
         assertEquals(user.getUsername(), foundUser.getUsername());
     }
@@ -74,7 +74,7 @@ class UserServiceImplTest {
     @Test
     void findByUsername_ShouldThrowException_WhenUserDoesNotExist() {
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundException.class, () -> userService.findByUsername(user.getUsername()));
+        assertThrows(UserNotFoundException.class, () -> userService.findByUsernameOrErr(user.getUsername()));
     }
 
     @Test
