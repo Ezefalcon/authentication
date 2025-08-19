@@ -1,10 +1,10 @@
 package com.efalcon.authentication.service;
 
-import com.efalcon.authentication.model.Provider;
 import com.efalcon.authentication.model.User;
 import com.efalcon.authentication.model.dto.TokenDTO;
 import com.efalcon.authentication.model.dto.UserLogin;
 import com.efalcon.authentication.repository.UserRepository;
+import com.efalcon.authentication.service.exceptions.UserDeletedException;
 import com.efalcon.authentication.service.exceptions.UserNotFoundException;
 import com.efalcon.authentication.service.exceptions.UsernameAlreadyExistsException;
 import com.efalcon.authentication.service.exceptions.UsernameOrPasswordInvalidException;
@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
@@ -67,8 +66,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void removeById(Long id) {
-        if(this.userRepository.existsById(id)) {
-            this.userRepository.deleteById(id);
+        Optional<User> byId = this.userRepository.findById(id);
+        if(byId.isPresent()) {
+//            this.userRepository.deleteById(id);
+            User user = byId.get();
+            user.setDeleted(true);
+            this.save(user);
         } else throw new UserNotFoundException();
     }
 
@@ -97,7 +100,8 @@ public class UserServiceImpl implements UserService {
     public TokenDTO login(@Valid UserLogin userLogin) {
         try {
             User user = findByUsernameOrErr(userLogin.getUsername());
-            if(Objects.nonNull(user) && passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) {
+            if (user.isDeleted()) throw new UserDeletedException();
+            if (passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) {
                 String token = tokenService.generateToken(user);
                 return new TokenDTO(token);
             }

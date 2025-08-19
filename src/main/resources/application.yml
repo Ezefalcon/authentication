@@ -12,19 +12,22 @@ spring:
 #    generate-ddl: true
 #    show-sql: true
 
-  security:
-    oauth2:
-      client:
-        enabled: false # DISABLES OAUTH2
-        registration:
-          google:
-            client-secret: yourClientSecret # SET WITH YOUR GOOGLE CREDS
-            client-id: yourClientId # SET WITH YOUR GOOGLE CREDS
-            scope: openid,profile,email
-      resource-server:
-        jwt:
-          issuer-uri: https://accounts.google.com
-          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+security:
+  oauth2:
+    client:
+      enabled: false # DISABLES OAUTH2
+      registration:
+        google:
+          client-secret: yourClientSecret # SET WITH YOUR GOOGLE CREDS
+          client-id: yourClientId # SET WITH YOUR GOOGLE CREDS
+          scope: openid,profile,email
+    resource-server:
+      jwt:
+        issuer-uri: https://accounts.google.com
+        jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+redirect:
+  after:
+    login: /api/users/login/success
 server:
   servlet:
     context-path: /api
@@ -32,3 +35,7 @@ server:
 jwt:
   expiration: 100000
   secret: mkwEeHcRmXKXN4swNAEck5afGy93KiQ3 #EXAMPLE
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

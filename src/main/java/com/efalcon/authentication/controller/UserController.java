@@ -1,9 +1,7 @@
 package com.efalcon.authentication.controller;
 
 import com.efalcon.authentication.annotation.SameUserOrAdminAccessOnly;
-import com.efalcon.authentication.model.Provider;
 import com.efalcon.authentication.model.User;
-import com.efalcon.authentication.model.UserProvider;
 import com.efalcon.authentication.model.dto.*;
 import com.efalcon.authentication.service.UserService;
 import com.efalcon.authentication.service.exceptions.UserNotFoundException;
@@ -13,7 +11,6 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import com.efalcon.authentication.util.GenericMapper;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -47,8 +44,6 @@ public class UserController {
     /**
      * Following the conventions of REST API, but it can be changed
      * to /register
-     * @param user
-     * @return
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -60,6 +55,12 @@ public class UserController {
     @PostMapping("/login")
     public TokenDTO login(@RequestBody UserLogin userLogin) {
         return this.userService.login(userLogin);
+    }
+
+    @GetMapping("/login/success")
+    public String loginSuccess() {
+        return "This is just shows that you have successfully logged in. You can see the token in the URL, you can change the" +
+                "redirect URL in application.yml";
     }
 
     @GetMapping("/checkUsernameAvailability/{username}")
@@ -75,7 +76,7 @@ public class UserController {
     }
 
     @SameUserOrAdminAccessOnly
-    @DeleteMapping
+    @DeleteMapping(value = "/{id}", name = "id")
     public void delete(@PathVariable Long id) {
         this.userService.removeById(id);
     }

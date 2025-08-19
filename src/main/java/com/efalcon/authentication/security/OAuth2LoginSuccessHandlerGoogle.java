@@ -7,6 +7,7 @@ import com.efalcon.authentication.model.UserProvider;
 import com.efalcon.authentication.service.TokenService;
 import com.efalcon.authentication.service.UserService;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -23,6 +24,9 @@ import java.util.Optional;
 @Component
 public class OAuth2LoginSuccessHandlerGoogle extends SimpleUrlAuthenticationSuccessHandler {
 
+    @Value("${redirect.after.login}")
+    private String redirectAfterLogin;
+
     private final UserService userService;
     private final TokenService tokenService;
 
@@ -33,7 +37,7 @@ public class OAuth2LoginSuccessHandlerGoogle extends SimpleUrlAuthenticationSucc
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException {
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         OAuth2User oauthUser = oauthToken.getPrincipal();
 
@@ -65,8 +69,16 @@ public class OAuth2LoginSuccessHandlerGoogle extends SimpleUrlAuthenticationSucc
         // Generate JWT
         String jwt = tokenService.generateToken(user);
 
-        // Send JWT in the response
+        redirectToAndSetToken(response, jwt, redirectAfterLogin);
+    }
+
+    private void sendJWTInResponse(HttpServletResponse response, String jwt) throws IOException {
         response.getWriter().write(jwt);
         response.getWriter().flush();
+    }
+
+    private void redirectToAndSetToken(HttpServletResponse response, String jwt, String redirectTo) throws IOException {
+        String frontendUrl = redirectTo + "?token=" + jwt;
+        response.sendRedirect(frontendUrl);
     }
 }

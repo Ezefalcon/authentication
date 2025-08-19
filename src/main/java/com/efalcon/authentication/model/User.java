@@ -28,6 +28,8 @@ public class User {
     private String email;
     /** Picture URL */
     private String picture;
+    /** Is deleted */
+    private boolean isDeleted;
 
     /** Roles */
     @Enumerated(EnumType.STRING)
@@ -37,4 +39,8 @@ public class User {
     /** Users can have multiple linked accounts, if no provider is set, the account was created in the app */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserProvider> providers;
+
+    public boolean isLocalAccount() {
+        return providers.isEmpty();
+    }
 }
