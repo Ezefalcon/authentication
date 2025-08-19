@@ -21,6 +21,14 @@ security:
           client-secret: yourClientSecret # SET WITH YOUR GOOGLE CREDS
           client-id: yourClientId # SET WITH YOUR GOOGLE CREDS
           scope: openid,profile,email
+        facebook:
+          client-id: YOUR_FACEBOOK_CLIENT_ID
+          client-secret: YOUR_FACEBOOK_CLIENT_SECRET
+          scope:
+            - email
+            - public_profile
+          redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+          client-name: Facebook
     resource-server:
       jwt:
         issuer-uri: https://accounts.google.com

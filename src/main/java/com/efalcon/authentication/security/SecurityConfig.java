@@ -2,7 +2,6 @@ package com.efalcon.authentication.security;
 
 
 import com.efalcon.authentication.service.TokenService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +40,7 @@ public class SecurityConfig {
     @Order(1)
     @ConditionalOnProperty(name = "spring.security.oauth2.enabled")
     public SecurityFilterChain googleFilterChain(HttpSecurity http,
-                                                 OAuth2LoginSuccessHandlerGoogle oAuth2LoginSuccessHandlerGoogle) throws Exception {
+                                                 GoogleOAuthAuthenticationSuccessHandler oAuth2LoginSuccessHandlerGoogle) throws Exception {
         http
                 .securityMatcher("/auth/google/**", "/oauth2/**", "/login/oauth2/**")
                 .authorizeHttpRequests(auth -> auth

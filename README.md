@@ -49,14 +49,15 @@ It is designed to be used as a microservice within an internal network for handl
 
 ## Enable OAuth2
 
-Set your google credentials
+Set your google/facebook credentials
 
    ![img.png](oauth2.png)
 
 Set spring.security.oauth2.enabled to true
 
-   Go to http://localhost:8080/api/login and log in with your google acc from there
+   Go to http://localhost:8080/api/oauth2/authorization/google or http://localhost:8080/api/oauth2/authorization/facebook and log in with your acc from there
 
+   
 ### API Endpoints
 
 #### User Registration
