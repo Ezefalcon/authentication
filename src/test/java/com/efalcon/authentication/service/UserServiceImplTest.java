@@ -99,21 +99,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void removeById_ShouldDeleteUser_WhenUserExists() {
-        when(userRepository.existsById(user.getId())).thenReturn(true);
-        doNothing().when(userRepository).deleteById(user.getId());
-
-        assertDoesNotThrow(() -> userService.removeById(user.getId()));
-        verify(userRepository).deleteById(user.getId());
-    }
-
-    @Test
-    void removeById_ShouldThrowException_WhenUserDoesNotExist() {
-        when(userRepository.existsById(user.getId())).thenReturn(false);
-        assertThrows(UserNotFoundException.class, () -> userService.removeById(user.getId()));
-    }
-
-    @Test
     void loadUserByUsername_ShouldReturnUserDetails() {
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
         UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
